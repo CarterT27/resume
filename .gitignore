@@ -1,3 +1,16 @@
+# Ignore everything by default to prevent leaks
 *
-!.typ
-README.md
+
+# Allow specific directories
+!template/
+!template/*.pdf
+
+# Build System and Config Templates
+!Makefile
+
+# Documentation
+!README.md
+
+# Source Files
+!*.typ
+!.gitignore

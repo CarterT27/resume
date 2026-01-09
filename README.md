@@ -1,65 +1,54 @@
-# Resume Template
+# Resume Repository
 
-This repository contains a resume template built with [Typst](https://typst.app/) and configured via a YAML file.
+This repository manages multiple versions of my resume (SWE, Research, Company-Specific, etc.) using [Typst](https://typst.app/). It is inspired by [Jake's Resume Template](https://www.overleaf.com/latex/templates/jakes-resume/syzfjbzwjncs).
+
+## Structure
+
+- **`common.yaml`**: Contains shared personal data (Contact info, Education, Experience pool). **Note:** This file is ignored by git to protect private data.
+- **`layout.typ`**: The common Typst layout definition.
+- **`template/`**: Template directory for creating new resume versions.
+- **`swe/`, `research/`, etc.**: Subdirectories for specific resume versions. Each contains:
+    - `First_Last_resume.typ`: The entry point for that version.
+    - `config.yaml`: Role-specific overrides (ignored by git).
 
 ## Prerequisites
 
-You need to have **Typst** installed on your system.
-- **macOS (Homebrew):** `brew install typst`
-- **Windows (Winget):** `winget install typst`
-- **Linux (Arch):** `pacman -S typst`
-- **Other:** Check the [Typst installation guide](https://github.com/typst/typst#installation).
+- **Typst**: [Installation Guide](https://github.com/typst/typst#installation)
+- **Make**: For building the resumes.
 
 ## Usage
 
-### 1. Modify Content
-All personal information and resume content are stored in `config.yaml`. Open this file in any text editor to update:
-- Contact Information (Name, Email, Phone, etc.)
-- Links (Website, LinkedIn, GitHub)
-- Education
-- Experience
-- Projects
-- Awards
-- Skills
+### 1. Setup
+Ensure you have a `common.yaml` in the root directory. This file should contain your base information (Contact, Education, Experience).
 
-### 2. Move/Reorder Sections
-The layout is defined in `Carter_Tran_resume.typ`. To change the order of sections (e.g., move "Skills" above "Education"):
+### 2. Build Resumes
+Use the `Makefile` to build resumes. Change `First_Last_resume.typ` to your name.
 
-1. Open `Carter_Tran_resume.typ`.
-2. Locate the code block for the section you want to move. A section typically starts with `#section("Title")` and includes a loop like `#for ... in config.section_name { ... }`.
-3. Cut and paste the entire block to your desired location within the file.
+- **Build All:**
+  ```bash
+  make all
+  ```
+- **Build Specific Role:**
+  ```bash
+  make swe
+  make research
+  ```
+- **Clean Output:**
+  ```bash
+  make clean
+  ```
 
-**Example Section Block:**
-```typst
-#section("Education")
-
-#for edu in config.education {
-  resumeSubheading(
-    edu.institution,
-    edu.date,
-    edu.degree,
-    edu.location
-  )
-  resume-list-start([
-    #for item in edu.items [
-      - #eval(item, mode: "markup")
-    ]
-  ])
-}
-```
-
-### 3. Compile
-To generate the PDF resume, run the following command in your terminal:
+### 3. Create New Resume
+To create a new resume version (e.g., for a "Data Scientist" role):
 
 ```bash
-typst compile Carter_Tran_resume.typ
+make new NAME=data_scientist
 ```
+This creates a `data_scientist/` directory. Edit `data_scientist/config.yaml` to override specific sections or select specific experiences.
 
-This will create `Carter_Tran_resume.pdf` in the same directory.
-
-### 4. Watch Mode (Optional)
-To automatically recompile whenever you save changes to `.typ` or `.yaml` files:
+### 4. Development
+To watch for changes and auto-compile a specific resume:
 
 ```bash
-typst watch Carter_Tran_resume.typ
+typst watch swe/First_Last_resume.typ
 ```
