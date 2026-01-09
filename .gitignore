@@ -1,16 +1,12 @@
-# Ignore everything by default to prevent leaks
+# Ignore everything by default
 *
 
-# Allow specific directories
-!template/
-!template/*.pdf
-
-# Build System and Config Templates
-!Makefile
-
-# Documentation
-!README.md
-
-# Source Files
-!*.typ
+# Allow core project files
 !.gitignore
+!Makefile
+!README.md
+!layout.typ
+
+# Allow the template directory and all its contents
+!template/
+!template/**
