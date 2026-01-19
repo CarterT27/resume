@@ -88,6 +88,33 @@
     v(heading-after-spacing)
   }
 
+  // Render bullet items if they exist
+  let render-items(entry) = {
+    if "items" in entry and entry.items != none and entry.items.len() > 0 {
+      resume-list-start([
+        #for item in entry.items [
+          - #eval(item, mode: "markup")
+        ]
+      ])
+    }
+  }
+
+  // Render a section with entries
+  let render-section(title, entries, render-heading) = {
+    section(title)
+    for (i, entry) in entries.enumerate() {
+      render-heading(entry)
+      let has-items = "items" in entry and entry.items != none and entry.items.len() > 0
+      render-items(entry)
+      if i < entries.len() - 1 {
+        v(entry-spacing)
+      } else if not has-items {
+        // Cancel out the negative heading-after-spacing when there are no items
+        v(-heading-after-spacing)
+      }
+    }
+  }
+
   // Document Content
   align(center)[
     #text(size: name-font-size, weight: "regular")[#smallcaps[#name]] \
@@ -104,58 +131,26 @@
   ]
 
   if "education" in data {
-    section("Education")
-    for edu in data.education {
-      resumeSubheading(
-        edu.institution,
-        edu.date,
-        edu.degree,
-        edu.location
-      )
-      resume-list-start([
-        #for item in edu.items [
-          - #eval(item, mode: "markup")
-        ]
-      ])
-    }
+    render-section("Education", data.education, edu => {
+      resumeSubheading(edu.institution, edu.date, edu.degree, edu.location)
+    })
   }
 
   if "experience" in data {
-    section("Experience")
-    for (i, exp) in data.experience.enumerate() {
+    render-section("Experience", data.experience, exp => {
       resumeSubheading(
         eval(exp.company, mode: "markup"),
         exp.date,
         eval(exp.role, mode: "markup"),
         exp.location
       )
-      resume-list-start([
-        #for item in exp.items [
-          - #eval(item, mode: "markup")
-        ]
-      ])
-      if i < data.experience.len() - 1 {
-        v(entry-spacing)
-      }
-    }
+    })
   }
 
   if "projects" in data {
-    section("Extracurriculars and Projects")
-    for (i, project) in data.projects.enumerate() {
-      resumeProjectHeading(
-        eval(project.title, mode: "markup"),
-        project.date
-      )
-      resume-list-start([
-        #for item in project.items [
-          - #eval(item, mode: "markup")
-        ]
-      ])
-      if i < data.projects.len() - 1 {
-        v(entry-spacing)
-      }
-    }
+    render-section("Extracurriculars and Projects", data.projects, project => {
+      resumeProjectHeading(eval(project.title, mode: "markup"), project.date)
+    })
   }
 
   if "awards" in data {
