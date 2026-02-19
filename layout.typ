@@ -13,16 +13,17 @@
   let github_display = data.at("github_display", default: "")
 
   // Spacing constants
-  let entry-spacing = 1pt
+  let entry-spacing = 0pt
   let bullet-spacing = 0.65em
   let bullet-line-height = 0.5em
   let heading-after-spacing = -6pt
   let heading-row-gap = 3pt
   let heading-before-spacing = -2pt
   let section-title-spacing = -7pt
+  let post-list-spacing-adjust = -2pt
 
   // Font size constants
-  let base-font-size = 10pt
+  let base-font-size = 10.5pt
   let name-font-size = 24pt
   let section-font-size = 12pt
   let body-font-size = 9pt
@@ -70,7 +71,7 @@
       inset: 0pt,
       column-gutter: 0pt,
       row-gutter: heading-row-gap,
-      [*#title*], [#date],
+      [*#text(size: body-font-size)[#title]*], [#text(size: body-font-size)[#date]],
       [#text(style: "italic", size: body-font-size)[#subtitle]], [#text(style: "italic", size: body-font-size)[#location]]
     )
     v(heading-after-spacing)
@@ -96,6 +97,7 @@
           - #eval(item, mode: "markup")
         ]
       ])
+      v(post-list-spacing-adjust)
     }
   }
 
