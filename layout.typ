@@ -150,7 +150,7 @@
   }
 
   if "projects" in data {
-    render-section("Extracurriculars and Projects", data.projects, project => {
+    render-section("Projects", data.projects, project => {
       resumeProjectHeading(eval(project.title, mode: "markup"), project.date)
     })
   }
